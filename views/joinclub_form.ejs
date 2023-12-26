@@ -1,6 +1,14 @@
 <%- include('./partials/head', {title: title}) %>
   <body>
     <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <a href="/">Back</a>
+    <hr>
+    <form method="POST" action>
+      <div class="form-group">
+        <label for="passphase">Passphrase: </label>
+        <input type="text" id="passphase" placeholder="Enter the member's passphase" name="passphase" minlength="8" required="true">
+      </div>
+      <button type="submit">Submit</button>
+    </form>
   </body>
 </html>
