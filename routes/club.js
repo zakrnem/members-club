@@ -12,16 +12,16 @@ router.get("/user/join", userController.user_joinclub_get)
 router.post("/user/join", userController.user_joinclub_post)
 
 router.get("/user/login", userController.user_login_get)
-router.get("/user/login", userController.user_login_post)
+router.post("/user/login", userController.user_login_post)
 
 // Message routes
 
 router.get("/", messageController.message_list)
 
 router.get("/message/create", messageController.message_create_get)
-router.get("/message/create", messageController.message_create_post)
+router.post("/message/create", messageController.message_create_post)
 
 router.get("/message/update", messageController.message_update_get)
-router.get("/message/update", messageController.message_update_post)
+router.post("/message/update", messageController.message_update_post)
 
 module.exports = router
