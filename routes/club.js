@@ -18,4 +18,10 @@ router.get("/user/login", userController.user_login_post)
 
 router.get("/", messageController.message_list)
 
+router.get("/message/create", messageController.message_create_get)
+router.get("/message/create", messageController.message_create_post)
+
+router.get("/message/update", messageController.message_update_get)
+router.get("/message/update", messageController.message_update_post)
+
 module.exports = router

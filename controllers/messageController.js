@@ -8,3 +8,27 @@ exports.message_list = asyncHandler(async (req, res, next) => {
         title: "Message list"
     })
 })
+
+exports.message_create_get = asyncHandler(async (req, res, next) => {
+    res.render("message_form", {
+        title: "New message"
+    })
+})
+
+exports.message_create_post = asyncHandler(async (req, res, next) => {
+    res.render("message_form", {
+        title: "New message"
+    })
+})
+
+exports.message_update_get = asyncHandler(async (req, res, next) => {
+    res.render("message_form", {
+        title: "Update message"
+    })
+})
+
+exports.message_update_post = asyncHandler(async (req, res, next) => {
+    res.render("message_form", {
+        title: "Update message"
+    })
+})
