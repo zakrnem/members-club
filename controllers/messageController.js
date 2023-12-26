@@ -1,11 +1,18 @@
 const Message = require("../models/Message");
 const { body, validationResult } = require("express-validator");
 const asyncHandler = require("express-async-handler");
-const decode = require("html-entities").decode;
+const User = require("../models/User")
 
 exports.message_list = asyncHandler(async (req, res, next) => {
+  const allMessages = await Message.find({}).populate("user").exec()
+  allMessages.forEach((message) => {
+    message = decodeURIComponent(message)
+  })
   res.render("message_list", {
     title: "Message list",
+    message_list: allMessages,
+    member: true,
+    admin: true,
   });
 });
 

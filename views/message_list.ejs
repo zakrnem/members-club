@@ -5,5 +5,17 @@
     <a href="club/user/login">Log in</a>
     <a href="club/user/join">Join club</a>
     <a href="club/message/create">New message</a>
+    <div class="message-list">
+      <% let count = 1 %>
+      <% message_list.forEach((message) => { %>
+        <div class="message">
+          <% if(member) { %><strong><%= message.user.fullname %></strong><% } %>
+          <p><%= message.message %></p>
+          <h5><%= message.date %></h5>
+          <% if(admin) { %><button id="delete<%= count++ %>">Delete message</button><% } %>
+        </div>
+        <hr>
+      <% }) %>
+    </div>
   </body>
 </html>
