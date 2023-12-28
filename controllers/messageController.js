@@ -1,18 +1,33 @@
 const Message = require("../models/Message");
 const { body, validationResult } = require("express-validator");
 const asyncHandler = require("express-async-handler");
-const User = require("../models/User")
+const User = require("../models/User");
 
 exports.message_list = asyncHandler(async (req, res, next) => {
-  const allMessages = await Message.find({}).populate("user").exec()
+  const allMessages = await Message.find({}).populate("user").exec();
   allMessages.forEach((message) => {
-    message = decodeURIComponent(message)
-  })
+    message = decodeURIComponent(message);
+  });
+  const localUser = res.locals.currentUser;
+  let fullname;
+  let member;
+  let admin;
+  if (localUser) {
+    const user = await User.findById(localUser._id);
+    fullname = user.fullname;
+    member = user.membership === "true";
+    admin = user.membership === "admin";
+  } else {
+    member = false;
+    admin = false;
+  }
+
   res.render("message_list", {
     title: "Message list",
     message_list: allMessages,
-    member: true,
-    admin: true,
+    member: member,
+    admin: admin,
+    user: fullname,
   });
 });
 

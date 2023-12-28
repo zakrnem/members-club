@@ -2,6 +2,9 @@ const User = require("../models/User");
 const { body, validationResult } = require("express-validator");
 const asyncHandler = require("express-async-handler");
 const decode = require("html-entities").decode;
+const bcrypt = require("bcryptjs");
+const passport = require("passport");
+const debug = require("debug")("user");
 
 exports.user_create_get = asyncHandler(async (req, res, next) => {
   res.render("signup_form", {
@@ -10,8 +13,19 @@ exports.user_create_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.user_create_post = asyncHandler(async (req, res, next) => {
-  res.render("signup_form", {
-    title: "Sign up",
+  bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
+    try {
+      const user = new User({
+        username: req.body.username,
+        password: hashedPassword,
+      });
+      const result = await user.save();
+      res.render("signup_form", {
+        title: "Sign up",
+      });
+    } catch (err) {
+      return next(err);
+    }
   });
 });
 
@@ -30,11 +44,26 @@ exports.user_joinclub_post = asyncHandler(async (req, res, next) => {
 exports.user_login_get = asyncHandler(async (req, res, next) => {
   res.render("login_form", {
     title: "Log in",
+    error: false,
   });
 });
 
 exports.user_login_post = asyncHandler(async (req, res, next) => {
-  res.render("login_form", {
-    title: "Log in",
-  });
+  passport.authenticate("local", (err, user, info) => {
+    req.login(user, (err) => {
+      try {
+        if (user) {
+          res.redirect("/");
+        } else {
+          res.render("login_form", {
+            title: "Log in",
+            error:
+              "The username or password you entered is incorrect. Please double-check your login credentials and try again.",
+          });
+        }
+      } catch (err) {
+        debug(err);
+      }
+    });
+  })(req, res, next);
 });

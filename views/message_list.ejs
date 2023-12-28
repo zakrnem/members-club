@@ -1,10 +1,17 @@
 <%- include('./partials/head', {title: title}) %>
   <body>
     <h1><%= title %></h1>
-    <a href="club/user/create">Sign up</a>
-    <a href="club/user/login">Log in</a>
+    <% if (!user) { %>
+      <a href="club/user/create">Sign up</a>
+      <a href="club/user/login">Log in</a>
+    <% } else { %>
+      <a href="/">Log out</a>
+    <% } %>
     <a href="club/user/join">Join club</a>
     <a href="club/message/create">New message</a>
+    <% if (user) { %>
+      <h2>Welcome back <%= user %></h2>
+    <% } %>
     <div class="message-list">
       <% let count = 1 %>
       <% message_list.forEach((message) => { %>
