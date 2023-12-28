@@ -9,24 +9,42 @@ const debug = require("debug")("user");
 exports.user_create_get = asyncHandler(async (req, res, next) => {
   res.render("signup_form", {
     title: "Sign up",
+    error: false,
   });
 });
 
 exports.user_create_post = asyncHandler(async (req, res, next) => {
-  bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
-    try {
-      const user = new User({
-        username: req.body.username,
-        password: hashedPassword,
+  const existingUser = await User.findOne({ email: req.body.email})
+  if (!existingUser) {
+    if (req.body.password1 === req.body.password2) {
+      bcrypt.hash(req.body.password2, 10, async (err, hashedPassword) => {
+        try {
+          const user = new User({
+            first_name: req.body.first_name,
+            last_name: req.body.last_name,
+            email: req.body.email,
+            password: hashedPassword,
+            membership: false,
+          });
+          const result = await user.save();
+          res.redirect("/club/user/login");
+        } catch (err) {
+          debug(err)
+          return next(err);
+        }
       });
-      const result = await user.save();
+    } else {
       res.render("signup_form", {
         title: "Sign up",
+        error: "Passwords do not match."
       });
-    } catch (err) {
-      return next(err);
-    }
-  });
+    }  
+  } else {
+    res.render("signup_form", {
+      title: "Sign up",
+      error: "A user with the same email already exists."
+    });
+  }  
 });
 
 exports.user_joinclub_get = asyncHandler(async (req, res, next) => {
