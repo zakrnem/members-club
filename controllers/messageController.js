@@ -4,7 +4,7 @@ const asyncHandler = require("express-async-handler");
 const User = require("../models/User");
 
 exports.message_list = asyncHandler(async (req, res, next) => {
-  const allMessages = await Message.find({}).populate("user").exec();
+  const allMessages = await Message.find({}).populate("user").sort({ date: -1 }).exec();
   allMessages.forEach((message) => {
     message = decodeURIComponent(message);
   });
@@ -38,9 +38,12 @@ exports.message_create_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.message_create_post = asyncHandler(async (req, res, next) => {
-  res.render("message_form", {
-    title: "New message",
-  });
+  const message = new Message({
+    user: res.locals.currentUser._id,
+    message: req.body.message,
+  })
+  await message.save()
+  res.redirect("/");
 });
 
 exports.message_update_get = asyncHandler(async (req, res, next) => {

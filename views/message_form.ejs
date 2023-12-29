@@ -1,6 +1,14 @@
 <%- include('./partials/head', {title: title}) %>
   <body>
     <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <a href="/">Back</a>
+    <hr>
+    <form method="POST" action>
+      <div class="form-group">
+        <label for="message">Message: </label>
+        <textarea id="message" placeholder="Enter a message" name="message" rows="5" cols="50" minlength="10" required="true"></textarea>
+      </div>
+      <button type="submit">Submit</button>
+    </form>
   </body>
 </html>
