@@ -5,10 +5,13 @@
     <hr>
     <form method="POST" action>
       <div class="form-group">
-        <label for="passphase">Passphrase: </label>
-        <input type="text" id="passphase" placeholder="Enter the member's passphase" name="passphase" minlength="8" required="true">
+        <label for="passphrase">Passphrase: </label>
+        <input type="text" id="passphrase" placeholder="Enter the member's passphrase" name="passphrase" minlength="4" required="true">
       </div>
       <button type="submit">Submit</button>
     </form>
+    <% if (error) { %>
+      <p><%= error %></p>
+    <% } %>
   </body>
 </html>

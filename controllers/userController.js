@@ -14,7 +14,7 @@ exports.user_create_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.user_create_post = asyncHandler(async (req, res, next) => {
-  const existingUser = await User.findOne({ email: req.body.email})
+  const existingUser = await User.findOne({ email: req.body.email });
   if (!existingUser) {
     if (req.body.password1 === req.body.password2) {
       bcrypt.hash(req.body.password2, 10, async (err, hashedPassword) => {
@@ -29,34 +29,64 @@ exports.user_create_post = asyncHandler(async (req, res, next) => {
           const result = await user.save();
           res.redirect("/club/user/login");
         } catch (err) {
-          debug(err)
+          debug(err);
           return next(err);
         }
       });
     } else {
       res.render("signup_form", {
         title: "Sign up",
-        error: "Passwords do not match."
+        error: "Passwords do not match.",
       });
-    }  
+    }
   } else {
     res.render("signup_form", {
       title: "Sign up",
-      error: "A user with the same email already exists."
+      error: "A user with the same email already exists.",
     });
-  }  
+  }
 });
 
 exports.user_joinclub_get = asyncHandler(async (req, res, next) => {
   res.render("joinclub_form", {
     title: "Join the club",
+    error: false,
   });
 });
 
 exports.user_joinclub_post = asyncHandler(async (req, res, next) => {
-  res.render("joinclub_form", {
-    title: "Join the club",
+  const existingUser = await User.findOne({
+    _id: res.locals.currentUser._id,
   });
+  if (req.body.passphrase === "member") {
+    const updatedUser = new User({
+      first_name: existingUser.first_name,
+      last_name: existingUser.last_name,
+      email: existingUser.email,
+      password: existingUser.password,
+      membership: "true",
+      _id: existingUser._id,
+    });
+    await User.findByIdAndUpdate(res.locals.currentUser._id, updatedUser, {});
+    res.redirect("/");
+  }
+  if (req.body.passphrase === "admin") {
+    const updatedUser = new User({
+      first_name: existingUser.first_name,
+      last_name: existingUser.last_name,
+      email: existingUser.email,
+      password: existingUser.password,
+      membership: "admin",
+      _id: existingUser._id,
+    });
+    await User.findByIdAndUpdate(res.locals.currentUser._id, updatedUser, {});
+    res.redirect("/");
+  } else {
+    res.render("joinclub_form", {
+      title: "Join the club",
+      error: "The passphrase you entered is invalid.",
+    });
+  }
 });
 
 exports.user_login_get = asyncHandler(async (req, res, next) => {
@@ -90,7 +120,7 @@ exports.user_logout_get = asyncHandler(async (req, res, next) => {
   res.render("logout", {
     title: "Log out",
   });
-})
+});
 
 exports.user_logout_post = asyncHandler(async (req, res, next) => {
   req.logout((err) => {
@@ -99,4 +129,4 @@ exports.user_logout_post = asyncHandler(async (req, res, next) => {
     }
     res.redirect("/");
   });
-})
+});
