@@ -46,14 +46,16 @@ exports.message_create_post = asyncHandler(async (req, res, next) => {
   res.redirect("/");
 });
 
-exports.message_update_get = asyncHandler(async (req, res, next) => {
-  res.render("message_form", {
-    title: "Update message",
+exports.message_delete_get = asyncHandler(async (req, res, next) => {
+  const message = await Message.findById(req.params.id).populate("user").exec()
+  console.log(message)
+  res.render("message_delete", {
+    title: "Delete message",
+    message: message,
   });
 });
 
-exports.message_update_post = asyncHandler(async (req, res, next) => {
-  res.render("message_form", {
-    title: "Update message",
-  });
+exports.message_delete_post = asyncHandler(async (req, res, next) => {
+  await Message.findByIdAndDelete(req.params.id)
+  res.redirect("/")
 });

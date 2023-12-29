@@ -19,7 +19,7 @@
           <% if(member || admin) { %><strong><%= message.user.fullname %></strong><% } %>
           <p><%= message.message %></p>
           <h5><%= message.date %></h5>
-          <% if(admin) { %><button id="delete<%= count++ %>">Delete message</button><% } %>
+          <% if(admin) { %><a href="<%= message.url %>/delete">Delete message</a><% } %>
         </div>
         <hr>
       <% }) %>
