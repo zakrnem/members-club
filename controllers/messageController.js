@@ -4,7 +4,10 @@ const asyncHandler = require("express-async-handler");
 const User = require("../models/User");
 
 exports.message_list = asyncHandler(async (req, res, next) => {
-  const allMessages = await Message.find({}).populate("user").sort({ date: -1 }).exec();
+  const allMessages = await Message.find({})
+    .populate("user")
+    .sort({ date: -1 })
+    .exec();
   allMessages.forEach((message) => {
     message = decodeURIComponent(message);
   });
@@ -41,14 +44,14 @@ exports.message_create_post = asyncHandler(async (req, res, next) => {
   const message = new Message({
     user: res.locals.currentUser._id,
     message: req.body.message,
-  })
-  await message.save()
+  });
+  await message.save();
   res.redirect("/");
 });
 
 exports.message_delete_get = asyncHandler(async (req, res, next) => {
-  const message = await Message.findById(req.params.id).populate("user").exec()
-  console.log(message)
+  const message = await Message.findById(req.params.id).populate("user").exec();
+  console.log(message);
   res.render("message_delete", {
     title: "Delete message",
     message: message,
@@ -56,6 +59,6 @@ exports.message_delete_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.message_delete_post = asyncHandler(async (req, res, next) => {
-  await Message.findByIdAndDelete(req.params.id)
-  res.redirect("/")
+  await Message.findByIdAndDelete(req.params.id);
+  res.redirect("/");
 });
